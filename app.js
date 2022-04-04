@@ -77,8 +77,13 @@ http.createServer((request, response) => {
             return;
         }
 
+        // normalise hardware hash -- sometimes is padded incorrectly when it comes out of the registry
+        // the Intune interface is intolerant of incorrectly padded base64
+        const hashBuffer = Buffer.from(input.HardwareHash, 'base64');
+        const hardwareHashReencoded = hashBuffer.toString('base64');
+
         let writer = fs.createWriteStream(config.csvFile, {flags: 'a'});
-        writer.write(`${input.DeviceSerialNumber},${input.WindowsProductID},${input.HardwareHash}\r\n`);
+        writer.write(`${input.DeviceSerialNumber},${input.WindowsProductID},${hardwareHashReencoded}\r\n`);
         writer.end();
 
         response.writeHead(204); // no content
