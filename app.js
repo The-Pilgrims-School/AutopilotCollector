@@ -78,7 +78,7 @@ http.createServer((request, response) => {
         }
 
         let writer = fs.createWriteStream(config.csvFile, {flags: 'a'});
-        writer.write(`"${input.DeviceSerialNumber}","${input.WindowsProductID}","${input.HardwareHash}"\r\n`);
+        writer.write(`${input.DeviceSerialNumber},${input.WindowsProductID},${input.HardwareHash}\r\n`);
         writer.end();
 
         response.writeHead(204); // no content
