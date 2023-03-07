@@ -12,6 +12,8 @@ const configData = fs.readFileSync('./volatile/config.json', 'utf8');
 
 const config = JSON.parse(configData);
 
+console.log('Starting...');
+
 http.createServer((request, response) => {
 
     if (request.method != 'POST') {
@@ -86,8 +88,16 @@ http.createServer((request, response) => {
         writer.write(`${input.DeviceSerialNumber},${input.WindowsProductID},${hardwareHashReencoded}\r\n`);
         writer.end();
 
+	console.log(`Received ${input.DeviceSerialNumber}`);
+
         response.writeHead(204); // no content
 
         response.end();
     }); 
-}).listen(config.port, '127.0.0.1');
+}).listen(config.port);
+
+console.log('Listening for AutoPilot information on port ' + config.port);
+console.log('Use \'magic.ps1\' on target devices to have them send their AutoPilot info to this server.');
+console.log('Then access ' + config.csvFile + ' and upload this to Intune.');
+
+
